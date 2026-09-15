@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+kubeconfig="$HOME/.kube/agent-prod-config"
+
+if [[ ! -f "$kubeconfig" ]]; then
+  echo "Kubeconfig not found: $kubeconfig" >&2
+  exit 1
+fi
+
+export KUBECONFIG="$kubeconfig"
+exec codex "$@"

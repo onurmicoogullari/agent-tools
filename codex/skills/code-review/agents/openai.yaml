@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Review"
+  short_description: "Pragmatic senior review before merge"
+  default_prompt: "Use $code-review to decide whether this branch should be introduced and whether it is correct, simple, maintainable, and ready to merge."
