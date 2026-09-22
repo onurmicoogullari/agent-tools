@@ -16,12 +16,12 @@ Codex is the source of truth. Claude Code and OpenCode receive adaptations that 
 │   └── scripts/               # Launchers that select a local Kubernetes configuration
 ├── claude/                    # Claude Code adaptations
 │   ├── CLAUDE.md              # Personal working instructions
-│   ├── agents/                # Nine native agent profiles
+│   ├── agents/                # Eight native agent profiles
 │   ├── skills/                # Skills with Claude-specific metadata
 │   └── settings.json          # Optional settings and plugin preferences
 ├── OpenCode/                  # OpenCode adaptations (directory name is case-sensitive)
 │   ├── AGENTS.md              # Personal working instructions
-│   ├── agents/                # Nine native agent profiles
+│   ├── agents/                # Eight native agent profiles
 │   ├── skills/                # Skills loaded through OpenCode's skill tool
 │   ├── commands/              # Explicit /plan workflow
 │   ├── plugin/                # Local Kubernetes configuration plugin
@@ -39,7 +39,7 @@ Each skill is a directory containing a `SKILL.md` entry point. Some include refe
 - **Development workflows:** code review, simplification, commits, pull requests, worktrees, CI troubleshooting, and explanations of unfamiliar code.
 - **Engineering:** backend services, Go, Rust, Kubernetes/OpenShift, infrastructure as code, developer platforms, security, observability, and reliability.
 - **Interface design:** frontend design plus focused workflows for accessibility audits, layout, typography, animation, responsiveness, performance, and polish.
-- **Planning and documentation:** implementation plans, design interviews, technical writing, diagrams, Azure DevOps work items, and Notion workflows.
+- **Planning and documentation:** implementation plans, design interviews, writing for docs, emails, and messages, diagrams, Azure DevOps work items, and Notion workflows.
 
 Some skills reflect personal team conventions. In particular, review the project and team defaults in `azure-devops-author` before adopting it elsewhere. Integration skills need their corresponding CLI, service connection, or local dependencies; copying a skill does not configure those services.
 
@@ -54,11 +54,11 @@ Some skills reflect personal team conventions. In particular, review the project
 | Reusable workflows and subject expertise | Skills | Skills | Skills |
 | Explicit `plan` workflow | Skill with source activation rules | `/implementation-plan`, explicit only | `/plan` command |
 | Architecture, investigation, research, review | 5 TOML agent profiles | 5 native agent profiles | 5 native subagent profiles |
-| Delegated backend, platform, IaC, documentation work | Main-session skills | 4 thin agents preloading the corresponding skills | 4 thin agents loading the corresponding skills |
+| Delegated backend, platform, and IaC work | Main-session skills | 3 thin agents preloading the corresponding skills | 3 thin agents loading the corresponding skills |
 | Personal instructions | `AGENTS.md` | `CLAUDE.md` | `AGENTS.md` |
 | Bundled Codex system skills | Archived under `skills/.system` | Not registered | Not registered |
 
-The current snapshot has **54 Codex skills** (48 personal + 6 system), **48 Claude skills**, and **47 OpenCode skills + 1 command**. Claude and OpenCode each have nine agent profiles. See [adaptation details](docs/skill-sync.md).
+The current snapshot has **54 Codex skills** (48 personal + 6 system), **48 Claude skills**, and **47 OpenCode skills + 1 command**. Claude and OpenCode each have eight agent profiles. See [adaptation details](docs/skill-sync.md).
 
 Claude's `code-review` skill is named **`engineering-review`** to avoid its bundled `/code-review`; `plan` becomes **`implementation-plan`** to avoid the built-in `/plan` mode command. The workflow content still comes from Codex.
 
