@@ -2,7 +2,7 @@
 
 The root MIT license covers original work contributed to this repository.
 It does not relicense third-party material. Copies and adaptations in `codex/`,
-`claude/`, and `OpenCode/` retain the licenses and attribution of their sources.
+`claude/`, and `opencode/` retain the licenses and attribution of their sources.
 Preserve each skill's license and notice files when copying it independently.
 
 ## Impeccable design skills — Apache-2.0
