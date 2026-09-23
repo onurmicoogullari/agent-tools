@@ -19,7 +19,7 @@ Codex is the source of truth. Claude Code and OpenCode receive adaptations that 
 │   ├── agents/                # Eight native agent profiles
 │   ├── skills/                # Skills with Claude-specific metadata
 │   └── settings.json          # Optional settings and plugin preferences
-├── OpenCode/                  # OpenCode adaptations (directory name is case-sensitive)
+├── opencode/                  # OpenCode adaptations
 │   ├── AGENTS.md              # Personal working instructions
 │   ├── agents/                # Eight native agent profiles
 │   ├── skills/                # Skills loaded through OpenCode's skill tool
@@ -84,15 +84,15 @@ cp claude/CLAUDE.md ~/.claude/CLAUDE.md
 # OpenCode (honor XDG_CONFIG_HOME if set)
 opencode_dir="${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
 mkdir -p "$opencode_dir/skills" "$opencode_dir/agents" "$opencode_dir/commands"
-rsync -a OpenCode/skills/ "$opencode_dir/skills/"
-rsync -a OpenCode/agents/ "$opencode_dir/agents/"
-rsync -a OpenCode/commands/ "$opencode_dir/commands/"
-cp OpenCode/AGENTS.md "$opencode_dir/AGENTS.md"
+rsync -a opencode/skills/ "$opencode_dir/skills/"
+rsync -a opencode/agents/ "$opencode_dir/agents/"
+rsync -a opencode/commands/ "$opencode_dir/commands/"
+cp opencode/AGENTS.md "$opencode_dir/AGENTS.md"
 ```
 
 On an existing installation, review obsolete skills/profiles and duplicate names across discovery paths; additive copies alone cannot remove retired definitions. Preview a specific owned directory with `rsync -an --delete SOURCE/ DEST/` before deciding which local files to retire. OpenCode can also discover `.agents` and `.claude` skills, so check which definition it actually loads when several copies exist.
 
-For OpenCode, also merge these rules from `OpenCode/opencode.jsonc` into the active configuration, preserving its other permissions. They hide shared copies of the explicit-only `plan` skill while leaving the `/plan` command available:
+For OpenCode, also merge these rules from `opencode/opencode.jsonc` into the active configuration, preserving its other permissions. They hide shared copies of the explicit-only `plan` skill while leaving the `/plan` command available:
 
 ```json
 {"permission": {"skill": {"plan": "deny"}}}
