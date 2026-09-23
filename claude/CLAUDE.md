@@ -29,6 +29,24 @@ that gets in the way of clarity.
   understand.
 - Prefer shorter responses unless detail is necessary for correctness.
 
+## PR Review Comments
+
+When drafting a review comment to post on a pull request:
+
+- Write casually, like a teammate typing it by hand. No headings, bold
+  labels, priority or severity tags (P0–P3), or verdict boilerplate.
+- Open directly with the suggestion, e.g. "Instead of X, we can Y." Skip
+  praise and warm-up.
+- Briefly explain why the suggested approach is better.
+- Recommend one path. Don't discuss ways to keep or patch the rejected
+  approach.
+- Link existing examples of the pattern in the repo, using permalinks
+  pinned to a commit.
+- Include a concrete snippet of the change when it helps.
+- Leave out how I verified it and follow-up reminders unless asked.
+- Show the draft first and post only after I approve. Default to a
+  "Request changes" review when the issue should block merge.
+
 ## Skills and delegated work
 
 Use skills in the main session for reusable workflows and subject expertise. Keep interviews, approval gates, and workflows relying on conversation history in the main session. Use native agent profiles for bounded independent assignments. Only delegate writing work when the user explicitly requests subagents; assign non-overlapping ownership.

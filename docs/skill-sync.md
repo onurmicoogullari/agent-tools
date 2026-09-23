@@ -4,7 +4,7 @@
 
 The laptop snapshot dated 2026-09-15 is the baseline. Codex compatibility improvements are also applied to the matching laptop skills. `~/.agents/skills` supplies the shared personal skills; `~/.codex/skills` supplies `code-simplifier` and the current system bundle. The latter wins duplicate skill paths, including `skill-creator` and `skill-installer`, without retaining obsolete helpers from the former.
 
-The five Codex agent profiles are `backend-architect`, `platform-architect`, `debugger`, `researcher`, and `reviewer`. The laptop's `AGENTS.md` supplies personal branch naming and response style. Retired repository-only skills, old expert profiles, and the old Claude system-skill copies are removed from active directories.
+The five Codex agent profiles are `backend-architect`, `platform-architect`, `debugger`, `researcher`, and `reviewer`. The laptop's `AGENTS.md` supplies personal branch naming, worktree rules, response style, and review comment style. Retired repository-only skills, old expert profiles, and the old Claude system-skill copies are removed from active directories.
 
 ## Native mappings
 
@@ -35,6 +35,7 @@ Command execution and live MCP queries belong to the parent session. Advisory ag
 - `commit` distinguishes a branch-summary message from a message for the exact staged changes in a new commit. Branch inspection includes staged, unstaged, and relevant untracked changes.
 - GitHub helper examples use Python 3; Claude resolves bundled helpers with `${CLAUDE_SKILL_DIR}`.
 - `find-skills` targets the current agent explicitly and respects project versus user installation scope.
+- `create-worktree` exists only for Claude Code and OpenCode. The Codex app and CLI manage their own worktrees, and a skill that creates sibling worktrees conflicts with their sandbox and their review, commit, and PR features. Codex gets the branch naming and worktree rules through `AGENTS.md` instead.
 
 ## Maintenance checks
 

@@ -58,7 +58,7 @@ Some skills reflect personal team conventions. In particular, review the project
 | Personal instructions | `AGENTS.md` | `CLAUDE.md` | `AGENTS.md` |
 | Bundled Codex system skills | Archived under `skills/.system` | Not registered | Not registered |
 
-The current snapshot has **54 Codex skills** (48 personal + 6 system), **48 Claude skills**, and **47 OpenCode skills + 1 command**. Claude and OpenCode each have eight agent profiles. See [adaptation details](docs/skill-sync.md).
+The current snapshot has **53 Codex skills** (47 personal + 6 system), **48 Claude skills**, and **47 OpenCode skills + 1 command**. Claude and OpenCode each have eight agent profiles. See [adaptation details](docs/skill-sync.md).
 
 Claude's `code-review` skill is named **`engineering-review`** to avoid its bundled `/code-review`; `plan` becomes **`implementation-plan`** to avoid the built-in `/plan` mode command. The workflow content still comes from Codex.
 
