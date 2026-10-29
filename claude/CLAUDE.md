@@ -1,11 +1,29 @@
 # CLAUDE.md
 
-## Git Worktrees and Branches
+## Git Branches
 
-Before making any file change in a git repository, use the `create-worktree`
-skill to create or resume a worktree on its own branch. Skip the worktree for
-read-only work or when the user says not to. Use the skill's branch naming
-rules whenever you create a branch, with or without a worktree.
+Name branches that will be pushed to origin `<prefix>/<short-description>` in
+kebab case, for example `fix/auth-timeout`. Choose the prefix from the content
+of the change:
+
+- `feat/` for new features or meaningful capability additions.
+- `fix/` for bug fixes, broken behavior, or regressions.
+- `docs/` for documentation-only changes, including corrections, new pages,
+  guides, and documentation restructuring.
+- `refact/` for behavior-preserving restructuring that improves clarity, reuse,
+  or maintainability.
+- `chore/` for maintenance, tooling, dependency updates, formatting, or
+  repository hygiene.
+
+If the repository's `AGENTS.md` or `CLAUDE.md` defines its own branch naming,
+follow that instead.
+
+If the session already runs in a worktree on a placeholder branch (such as
+`claude/<random-name>`) with no commits of its own, rename that branch with
+`git branch -m` instead of creating another worktree.
+
+When you pick the branch name, also rename the session to match it (for example
+`fix/auth-timeout`) when the environment lets you set the session title.
 
 ## Response Style
 
@@ -28,6 +46,27 @@ that gets in the way of clarity.
 - Remove repetition, filler, and anything that does not help the reader act or
   understand.
 - Prefer shorter responses unless detail is necessary for correctness.
+
+## PR Review Comments
+
+When drafting a review comment to post on a pull request:
+
+- Write casually, like a teammate typing it by hand. No headings, bold
+  labels, priority or severity tags (P0–P3), or verdict boilerplate.
+- Keep it short: a few sentences per issue, a few short paragraphs in
+  total. State the problem, its main consequence, and the fix. Skip
+  detailed impact lists.
+- Open directly with the suggestion, e.g. "Instead of X, we can Y." Skip
+  praise and warm-up.
+- Briefly explain why the suggested approach is better.
+- Recommend one path. Don't discuss ways to keep or patch the rejected
+  approach.
+- Link existing examples of the pattern in the repo, using permalinks
+  pinned to a commit.
+- Include a short snippet only when a sentence can't describe the fix.
+- Leave out how I verified it and follow-up reminders unless asked.
+- Show the draft first and post only after I approve. Default to a
+  "Request changes" review when the issue should block merge.
 
 ## Skills and delegated work
 
