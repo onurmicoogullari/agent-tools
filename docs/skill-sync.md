@@ -26,7 +26,7 @@ Command execution and live MCP queries belong to the parent session. Advisory ag
 
 ## Codex-only bundle
 
-`imagegen`, `openai-docs`, `plugin-creator`, `review-agent`, `skill-creator`, and `skill-installer` remain complete snapshots under `codex/skills/.system`. They depend on Codex-specific tool contracts, installation paths, packaging, or runtime behavior. They are not blindly exposed to other tools. Their archived scripts and assets are preserved for Codex; no plugin cache is imported.
+`imagegen`, `openai-docs`, `review-agent`, `skill-creator`, and `skill-installer` remain complete snapshots under `codex/skills/.system`. They depend on Codex-specific tool contracts, installation paths, packaging, or runtime behavior. They are not blindly exposed to other tools. Their archived scripts and assets are preserved for Codex; no plugin cache is imported.
 
 ## Workflow details
 
