@@ -1,20 +1,11 @@
 # CLAUDE.md
 
-## Git Branch Naming
+## Git Worktrees and Branches
 
-Never create branches with the `codex/` prefix.
-
-When creating a branch, choose one of these prefixes based on the content of the
-change:
-
-- `feat/` for new features or meaningful capability additions.
-- `fix/` for bug fixes, broken behavior, or regressions.
-- `docs/` for documentation-only changes, including corrections, new pages,
-  guides, and documentation restructuring.
-- `refact/` for behavior-preserving restructuring that improves clarity, reuse,
-  or maintainability.
-- `chore/` for maintenance, tooling, dependency updates, formatting, or
-  repository hygiene.
+Before making any file change in a git repository, use the `create-worktree`
+skill to create or resume a worktree on its own branch. Skip the worktree for
+read-only work or when the user says not to. Use the skill's branch naming
+rules whenever you create a branch, with or without a worktree.
 
 ## Response Style
 
