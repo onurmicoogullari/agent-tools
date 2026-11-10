@@ -9,7 +9,7 @@ Keep the lead reviewer responsible for intent, desirability, synthesis, severity
 - **Adversarial cross-cutting:** security, reliability, compatibility, negative paths, and shared assumptions.
 - **Verification:** tests, static validation, observability, and whether safeguards exercise risky behavior. Add only when a fourth pass is justified.
 
-Give every subagent the same resolved scope, base, intent, applicable repository instructions, and read-only boundary. Assign explicit responsibility and require only evidence-backed candidate findings containing priority, exact location, failure scenario, impact, minimal remedy, validation evidence, and confidence. Require a clear statement when no material issue is found.
+Give every subagent the same resolved scope, base, intent as stated in the commit message or pull request description, applicable repository instructions, and read-only boundary. Do not pass on the plan, later pull requests, or the author's reasoning, and tell each subagent to judge the merged state and run the checks in Find What Authors Miss for its lane. Assign explicit responsibility and require only evidence-backed candidate findings containing priority, exact location, failure scenario, impact, minimal remedy, validation evidence, and confidence. Require a clear statement when no material issue is found.
 
 Run independent lanes in parallel up to available capacity and wait for all requested results. Never use parallel review agents for concurrent edits.
 

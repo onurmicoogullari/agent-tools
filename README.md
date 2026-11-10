@@ -36,7 +36,7 @@ Each skill is a directory containing a `SKILL.md` entry point. Some include refe
 
 ## What's included
 
-- **Development workflows:** code review, simplification, commits, pull requests, worktrees, CI troubleshooting, and explanations of unfamiliar code.
+- **Development workflows:** code review, simplification, commits, pull requests, CI troubleshooting, and explanations of unfamiliar code.
 - **Engineering:** backend services, Go, Rust, Kubernetes/OpenShift, infrastructure as code, developer platforms, security, observability, and reliability.
 - **Interface design:** frontend design plus focused workflows for accessibility audits, layout, typography, animation, responsiveness, performance, and polish.
 - **Planning and documentation:** implementation plans, design interviews, writing for docs, emails, and messages, diagrams, Azure DevOps work items, and Notion workflows.
@@ -58,7 +58,7 @@ Some skills reflect personal team conventions. In particular, review the project
 | Personal instructions | `AGENTS.md` | `CLAUDE.md` | `AGENTS.md` |
 | Bundled Codex system skills | Archived under `skills/.system` | Not registered | Not registered |
 
-The current snapshot has **54 Codex skills** (48 personal + 6 system), **48 Claude skills**, and **47 OpenCode skills + 1 command**. Claude and OpenCode each have eight agent profiles. See [adaptation details](docs/skill-sync.md).
+The current snapshot has **52 Codex skills** (47 personal + 5 system), **47 Claude skills**, and **46 OpenCode skills + 1 command**. Claude and OpenCode each have eight agent profiles. See [adaptation details](docs/skill-sync.md).
 
 Claude's `code-review` skill is named **`engineering-review`** to avoid its bundled `/code-review`; `plan` becomes **`implementation-plan`** to avoid the built-in `/plan` mode command. The workflow content still comes from Codex.
 

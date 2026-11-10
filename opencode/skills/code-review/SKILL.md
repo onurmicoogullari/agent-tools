@@ -27,6 +27,17 @@ Keep reviews read-only. Local inspection and proportionate offline validation ar
 
 When explicitly asked to fix findings, review first, make minimal in-scope fixes, validate them, and re-review the resulting diff. Do not commit, push, deploy, or apply infrastructure unless separately requested.
 
+## Review in a Fresh Agent
+
+A reviewer who wrote the change, knows the plan behind it, or has already discussed it reads the diff as intended instead of as written. Always run the review in a fresh read-only reviewer subagent, whoever wrote the change:
+
+- Give it the resolved scope and base, the applicable repository instructions, the commit message and pull request description, and the read-only boundary. Do not give it the plan, later pull requests, design notes, the conversation, earlier review comments, suspected issues, or anyone's reasoning about the change. Tell it to follow this skill as the reviewer.
+- Keep the lead role in the calling session: verify each candidate finding against the code, set severity, and deliver the review. Do not drop a candidate because the plan or the conversation explains it away; that explanation is exactly what the reviewer must not rely on.
+- If you are the reviewer subagent, review directly. Do not start another reviewer agent.
+- If no subagent is available, state that the review is not independent and apply every check in [Find What Authors Miss](#find-what-authors-miss) with extra care.
+
+Never skip a review because the change looks small, mechanical, or like a workflow adjustment. A change that removes or loosens a check always gets a full review.
+
 ## Build Context
 
 1. Read applicable `AGENTS.md` and repository instructions, including nested rules governing changed files.
@@ -35,6 +46,7 @@ When explicitly asked to fix findings, review first, make minimal in-scope fixes
 4. Trace affected callers, consumers, contracts, storage, migrations, jobs, deployment order, identities, network paths, configuration, and rollback behavior.
 5. Identify pinned language, framework, provider, cloud API, Kubernetes, and tool versions. Check primary documentation or source when version-sensitive semantics matter.
 6. Separate branch-caused behavior from pre-existing issues. Report an older issue only when the change exposes, worsens, or depends on it, and label it clearly.
+7. Define the merged state: the base branch plus this change, deployed to every environment it reaches, with no later pull requests. Planned follow-ups, roadmap items, and "the next PR does that" do not exist for this review. Judge every behavior, message, and document against the merged state.
 
 ## Review the Change
 
@@ -79,9 +91,38 @@ Apply only the lenses relevant to the scope, following risk across system bounda
 - Inspect tests for meaningful assertions, negative paths, compatibility, and regression coverage. Report a gap only when material behavior remains unverified.
 - Record checks, results, and important omissions. A green suite is not proof of safety; missing coverage alone is not a defect.
 
+## Find What Authors Miss
+
+Run every check below on every review, after the lenses above and before writing the report. Cover all changed files and their consumers before going deep on any single issue; one finding never ends the search.
+
+### The change works on its own
+
+- For every new route, match, selector, policy, rule, webhook, or condition, prove that a real input reaches it in the merged state. Trace the processing order (filter chains, admission phases, reconcile steps, sync waves) and confirm that each value it depends on already exists at the point where it is evaluated. Check that order against the pinned version's documentation or source.
+- If something only works once a planned follow-up lands, it is a finding, unless the change is inert in the merged state and its description says so.
+- Trace what happens to objects the old version already created when the new version reconciles them. Look for kept, cached, or create-once resources whose content now changes, immutable fields, renamed keys, and data stored under an old identifier that nothing reads any more.
+- Trace the mixed-version window during rollout: old and new controllers, functions, clients, or gateways running at the same time, and independently synced applications arriving in either order.
+
+### Every claim in the change is true
+
+- List every factual statement the change adds or leaves behind: code comments, condition, status, and error messages, log lines, READMEs, docs pages, test tables and runbook expectations, examples, the commit message, and the pull request description.
+- Check each statement against the code it describes, including code in other components. Claims such as "the Tenant shows this", "the gateway rejects it", or "Test syncs content" need evidence from the consumer, not from the author's intent.
+- Check that each statement holds in the merged state, for the version that actually runs in each environment and for every environment it names. Behavior that starts with a later release or pull request must say so, for example "from v0.15.0".
+- Search the repository for existing text that describes behavior the change alters, including test expectation tables, runbooks, and security claims such as "the platform removes untrusted headers". Stale text that would mislead an operator or tenant is a finding.
+
+### Safeguards survive
+
+- Treat every removed or loosened validation, hard fail, guard, test, assertion, or policy as a finding unless the change adds an equivalent guarantee. A safeguard that blocks a new workflow is a reason to redesign the workflow, not to weaken the safeguard.
+- When a security property depends on an external system the repository cannot verify (CDN or proxy header rules, upstream stripping, a provider setting), and the change trusts or forwards that input, report it as a finding. Do not demote it to residual risk or an optional point.
+
+### Tests prove the behavior
+
+- Tests written alongside the change share the author's blind spots. For each behavior the change claims, find the assertion that would fail if it broke. A test that checks that an object exists, but not its content, does not cover a change to its content.
+- When cheap, revert the key line or flip the key condition locally and confirm a test fails. Restore the change afterwards.
+- In shell scripts, check error handling: `set -e` is ignored inside a function or subshell called on the left of `||` or `&&`, in an `if` or `while` condition, and in a subshell that inherits `set +e`. Check pipelines without `pipefail`, unchecked command substitutions, and empty output that a later check treats as success.
+
 ## Delegate Selectively
 
-Use one lead reviewer for routine or tightly scoped changes. For an explicitly requested multi-agent review, or a broad high-risk change that divides into independent domains, read and follow [references/multi-agent.md](references/multi-agent.md). The lead always owns scope, desirability, evidence verification, severity, synthesis, and the final recommendation.
+Use one fresh reviewer subagent for routine or tightly scoped changes. For an explicitly requested multi-agent review, or a broad high-risk change that divides into independent domains, read and follow [references/multi-agent.md](references/multi-agent.md). The lead always owns scope, desirability, evidence verification, severity, synthesis, and the final recommendation.
 
 ## Report Only Actionable Findings
 
@@ -100,6 +141,8 @@ Use these priorities:
 
 Use P1 for a design objection only when merging commits to a seriously harmful or difficult-to-reverse direction; use P2 or P3 for narrower concrete design problems. Keep optional alternatives out of findings.
 
+Never move a trust-boundary, security, data-loss, removed-safeguard, or misleading-documentation issue into optional points or residual risk to keep the finding count low. A false statement in a comment, message, or README that an operator or tenant would act on is at least P3.
+
 For each finding, provide a short imperative title, the tightest file and line or diff hunk, triggering scenario, impact, evidence, and the smallest safe remedy. Mention trade-offs only when decision-relevant and state uncertainty explicitly. Omit claims that do not survive an attempt to falsify them. Do not inflate severity, combine unrelated issues, or bury blockers.
 
 ## Deliver the Review
@@ -108,7 +151,7 @@ Lead with findings in priority order, placing a fundamental design problem first
 
 1. **Recommendation:** `Introduce`, `Introduce after changes`, `Reconsider the approach`, or `Do not introduce`, with concise rationale.
 2. **Verdict:** `Block`, `Changes requested`, `Approve with caveats`, or `No material findings`.
-3. **Scope:** Target, base or range, working-tree state, and exclusions.
+3. **Scope:** Target, base or range, working-tree state, exclusions, and whether the review ran in a fresh agent.
 4. **Verification:** Checks run and outcomes.
 5. **Residual risk:** Unverified areas, assumptions, or safe post-merge follow-up.
 
