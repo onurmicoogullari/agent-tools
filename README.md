@@ -2,7 +2,7 @@
 
 A personal collection of reusable skills, specialist agent profiles, and configuration for **Codex**, **Claude Code**, and **OpenCode**. It covers everyday development workflows, backend and platform engineering, interface design, and documentation.
 
-Codex is the source of truth. Claude Code and OpenCode receive adaptations that use each tool's native skill, command, and agent formats.
+Codex is the source of truth. Claude Code and OpenCode receive adaptations that use each tool's native skill, command, and agent formats. A few Claude-only additions are listed under [skills and agent profiles](#skills-and-agent-profiles).
 
 ## Repository structure
 
@@ -40,8 +40,9 @@ Each skill is a directory containing a `SKILL.md` entry point. Some include refe
 - **Engineering:** backend services, Go, Rust, Kubernetes/OpenShift, infrastructure as code, developer platforms, security, observability, and reliability.
 - **Interface design:** frontend design plus focused workflows for accessibility audits, layout, typography, animation, responsiveness, performance, and polish.
 - **Planning and documentation:** implementation plans, design interviews, writing for docs, emails, and messages, diagrams, Azure DevOps work items, and Notion workflows.
+- **Teaching:** platform engineering explained from zero for a trainee, with printable primers, ticket breakdowns, coaching, and quizzes (Claude Code only).
 
-Some skills reflect personal team conventions. In particular, review the project and team defaults in `azure-devops-author` before adopting it elsewhere. Integration skills need their corresponding CLI, service connection, or local dependencies; copying a skill does not configure those services.
+Some skills reflect personal team conventions. In particular, review the project and team defaults in `azure-devops-author`, and the learner profile and `app-platform` repository references in `platform-tutor`, before adopting them elsewhere. Integration skills need their corresponding CLI, service connection, or local dependencies; copying a skill does not configure those services.
 
 ## Skills and agent profiles
 
@@ -58,9 +59,9 @@ Some skills reflect personal team conventions. In particular, review the project
 | Personal instructions | `AGENTS.md` | `CLAUDE.md` | `AGENTS.md` |
 | Bundled Codex system skills | Archived under `skills/.system` | Not registered | Not registered |
 
-The current snapshot has **52 Codex skills** (47 personal + 5 system), **47 Claude skills**, and **46 OpenCode skills + 1 command**. Claude and OpenCode each have eight agent profiles. See [adaptation details](docs/skill-sync.md).
+The current snapshot has **52 Codex skills** (47 personal + 5 system), **48 Claude skills** (including the Claude-only `platform-tutor`), and **46 OpenCode skills + 1 command**. Claude and OpenCode each have eight agent profiles. See [adaptation details](docs/skill-sync.md).
 
-Claude's `code-review` skill is named **`engineering-review`** to avoid its bundled `/code-review`; `plan` becomes **`implementation-plan`** to avoid the built-in `/plan` mode command. The workflow content still comes from Codex.
+Claude's `code-review` skill is named **`engineering-review`** to avoid its bundled `/code-review`; `plan` becomes **`implementation-plan`** to avoid the built-in `/plan` mode command. The workflow content comes from Codex, except that `engineering-review` also has Claude-only rules for follow-up reviews and for checking examples and design choices against real input.
 
 Only create delegated writers when the user explicitly requests subagents. Interactive workflows stay in the main session. Language, Kubernetes, security, reliability, and observability expertise stays in skills so it can help during implementation as well as review.
 

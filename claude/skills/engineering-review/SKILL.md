@@ -23,6 +23,33 @@ Honor an explicit scope exactly. Otherwise review the current branch. Resolve a 
 
 Use the merge-base diff for branch reviews. Include staged, unstaged, and relevant untracked changes for the current branch unless excluded. Inspect other branches through repository objects without switching branches or mixing in the current working tree. State the resolved target, base or range, working-tree inclusion, and material exclusions; never silently reduce a whole-branch review to the last commit.
 
+### Follow-up reviews
+
+When the user has reviewed the target before, review only what changed since the user's own last review, unless the user asks for a full review. Reviews by anyone else, including bots, do not move this point.
+
+1. Find the last reviewed commit. Take whichever of these is newer in the branch's history:
+   - **On GitHub:** for a pull request, find the user's login with `gh api user --jq .login`, take that login's latest review on the pull request, in any state, including a dismissed one, and use its `commit_id`.
+   - **In this session:** the head commit of the most recent review round of the same target in this conversation, whether or not it was posted. Every report states its reviewed head commit; see the note after step 6.
+
+   If neither exists, do a full review. If the earlier round in this session included uncommitted changes, review the full scope again, because no commit marks what it saw.
+2. If the last reviewed commit is no longer reachable from the head, because the author amended, squashed, or rebased and force-pushed, the changes to review are the difference between the two versions of the change, not the paths they touch:
+   - Fetch the old commit by its SHA, for example `git fetch origin <last-reviewed>`. GitHub usually still serves commits that a force-push replaced.
+   - If its merge base with the base branch is the same as the head's, the changes are `git diff <last-reviewed> <head>`.
+   - If the branch was also rebased onto a newer base, use `git range-diff <old-merge-base>..<last-reviewed> <new-merge-base>..<head>`, which leaves out what came from the base branch. Treat a hunk that only changed because of the rebase as context, not as a change to review. If range-diff can't pair the commits, for example after several commits were squashed into one, diff the old merge-base diff against the new one instead.
+   - If you can't fetch the old commit, do a full review and say why.
+3. Otherwise the changes to review are the commits after the last reviewed commit, excluding commits that came in from the base branch, for example: `git log --no-merges <last-reviewed>..<head> ^origin/<base>`, and their diff, `git diff <last-reviewed> <head>` restricted to the paths in the merge-base diff. A merge from the base branch is not a change to review, but check its conflict resolutions in the changed files.
+4. Judge those changes against the whole branch or pull request at the head, not in isolation. Check the head checkout and the full merge-base diff for:
+   - code elsewhere in the change that calls, configures, or depends on the changed lines;
+   - claims elsewhere in the change, such as README text, docs, comments, tests, and the description, that the changes make false;
+   - safeguards elsewhere in the change that the changes bypass or make redundant;
+   - consumers outside the change, as for a full review.
+
+   Report a finding in code the new commits didn't touch only when they introduce, expose, or worsen it.
+5. As the lead, before reporting on a pull request, read the review threads opened since the user's last review, and leave out findings someone has already raised.
+6. State in the report that this is a follow-up review, with the last reviewed commit, where it came from (GitHub or this session), and the range.
+
+Every report, full or follow-up, states the head commit it reviewed, so that a later round in the same session can start from it.
+
 Keep reviews read-only. Local inspection and proportionate offline validation are allowed. Do not edit, commit, push, open pull requests, deploy, migrate data, mutate external systems, use configured credentials, or contact live environments unless the user explicitly includes that environment and action in scope.
 
 When explicitly asked to fix findings, review first, make minimal in-scope fixes, validate them, and re-review the resulting diff. Do not commit, push, deploy, or apply infrastructure unless separately requested.
@@ -31,8 +58,10 @@ When explicitly asked to fix findings, review first, make minimal in-scope fixes
 
 A reviewer who wrote the change, knows the plan behind it, or has already discussed it reads the diff as intended instead of as written. Always run the review in a fresh read-only reviewer subagent, whoever wrote the change:
 
-- Give it the resolved scope and base, the applicable repository instructions, the commit message and pull request description, and the read-only boundary. Do not give it the plan, later pull requests, design notes, the conversation, earlier review comments, suspected issues, or anyone's reasoning about the change. Tell it to follow this skill as the reviewer.
+- Give it the resolved scope and base, the applicable repository instructions, the commit message and pull request description, and the read-only boundary. For a [follow-up review](#follow-up-reviews), give it the changes to review, a checkout of the head and the full merge-base diff, and tell it to judge the changes against the whole branch or pull request. Do not give it the plan, later pull requests, design notes, the conversation, earlier review comments, suspected issues, or anyone's reasoning about the change. Tell it to follow this skill as the reviewer.
+- Make the changed code readable to it before it starts. Read-only reviewer profiles may have no shell and cannot run `git show` or `gh`. Save the scoped diff, the commit message, and `git show <head>:<path>` for every changed file to the scratchpad, and pass those paths in the brief. A report from a reviewer that could not read the changed code is not a review. Give it the files and have it finish; do not deliver its fact sheet as findings.
 - Keep the lead role in the calling session: verify each candidate finding against the code, set severity, and deliver the review. Do not drop a candidate because the plan or the conversation explains it away; that explanation is exactly what the reviewer must not rely on.
+- Check the reviewer's coverage as well as its findings. Every risk it names as something to check, in any of its messages, must end as a finding or as a stated reason why the code holds. When a risk it raised earlier is missing from its final report, check that risk yourself before delivering the review.
 - If you are the reviewer subagent, review directly. Do not start another reviewer agent.
 - If no subagent is available, state that the review is not independent and apply every check in [Find What Authors Miss](#find-what-authors-miss) with extra care.
 
@@ -109,6 +138,13 @@ Run every check below on every review, after the lenses above and before writing
 - Check that each statement holds in the merged state, for the version that actually runs in each environment and for every environment it names. Behavior that starts with a later release or pull request must say so, for example "from v0.15.0".
 - Search the repository for existing text that describes behavior the change alters, including test expectation tables, runbooks, and security claims such as "the platform removes untrusted headers". Stale text that would mislead an operator or tenant is a finding.
 
+### Examples and design choices hold under real input
+
+- Feed every code snippet, configuration example, and template that readers will copy the input a real user produces, not only the happy path. Try names that collide with the fields it sets, the naming conventions of the target ecosystem (for example PascalCase properties in .NET), empty and missing values, nested objects, and values the consumer does not recognise. Run it when the toolchain is available; otherwise trace it through the pinned library source.
+- Where an order or precedence rule decides which value wins, such as spread or merge order, override layers, first-match regexes, rule and filter order, or Helm list replacement, check every consumer of the result. One consumer may take the last value written while another takes the first match, so an order that protects one can break the other. Name what each possible order breaks.
+- When the alternatives to a design choice each fail in a different way, report the trade-off in one finding: what the current choice breaks, what the alternative breaks, and which option to take with the mitigation for its weakness. A finding that only names the current choice's failure invites the author to switch to the alternative, and the next round finds that alternative's failure.
+- In a follow-up review, treat each fix commit as a new design choice. Check what the fix gives up, not only that it removes the reported problem.
+
 ### Safeguards survive
 
 - Treat every removed or loosened validation, hard fail, guard, test, assertion, or policy as a finding unless the change adds an equivalent guarantee. A safeguard that blocks a new workflow is a reason to redesign the workflow, not to weaken the safeguard.
@@ -151,7 +187,7 @@ Lead with findings in priority order, placing a fundamental design problem first
 
 1. **Recommendation:** `Introduce`, `Introduce after changes`, `Reconsider the approach`, or `Do not introduce`, with concise rationale.
 2. **Verdict:** `Block`, `Changes requested`, `Approve with caveats`, or `No material findings`.
-3. **Scope:** Target, base or range, working-tree state, exclusions, and whether the review ran in a fresh agent.
+3. **Scope:** Target, base or range, reviewed head commit, whether this is a follow-up review and from which commit, working-tree state, exclusions, and whether the review ran in a fresh agent.
 4. **Verification:** Checks run and outcomes.
 5. **Residual risk:** Unverified areas, assumptions, or safe post-merge follow-up.
 

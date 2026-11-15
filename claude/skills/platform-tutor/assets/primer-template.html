@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Replace TOPIC everywhere. Keep the CSS: build-pdf.sh prints this page as A4. -->
+<title>TOPIC — a primer</title>
+<style>
+  @page { size: A4; margin: 18mm 18mm 20mm 18mm; }
+  :root {
+    --ink: #1d2329;
+    --muted: #5b6670;
+    --line: #c9d1d8;
+    --box: #eef2f5;
+    --accent: #0f766e;
+    --accent-soft: #e0f2ef;
+    --warn-soft: #fdf3e1;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font: 10.5pt/1.5 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    margin: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  h1 { font-size: 24pt; line-height: 1.15; margin: 0 0 2mm; }
+  .subtitle { font-size: 12pt; color: var(--muted); margin: 0 0 6mm; }
+  h2 {
+    font-size: 13pt; color: var(--accent);
+    margin: 7mm 0 2mm; padding-bottom: 1mm;
+    border-bottom: 1px solid var(--line);
+    break-after: avoid;
+  }
+  p { margin: 0 0 2.5mm; }
+  .lead { font-size: 12.5pt; font-weight: 600; }
+  ol, ul { margin: 0 0 2.5mm; padding-left: 6mm; }
+  li { margin-bottom: 1mm; }
+  code { font: 9.5pt/1.4 ui-monospace, Menlo, Consolas, monospace; background: var(--box); padding: 0 1mm; border-radius: 2px; }
+  pre {
+    font: 9pt/1.45 ui-monospace, Menlo, Consolas, monospace;
+    background: var(--box); border-left: 3px solid var(--line);
+    padding: 2.5mm 3mm; margin: 0 0 3mm; white-space: pre-wrap;
+    break-inside: avoid;
+  }
+  pre code { background: none; padding: 0; }
+  pre .out { color: var(--muted); }
+  pre .hl { color: var(--accent); font-weight: 700; }
+  .callout { padding: 3mm 4mm; margin: 0 0 3mm; border-radius: 3px; break-inside: avoid; }
+  .callout > :last-child { margin-bottom: 0; }
+  .callout .tag { display: block; font-size: 8.5pt; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 1mm; }
+  .analogy { background: var(--accent-soft); }
+  .analogy .tag { color: var(--accent); }
+  .breaks { background: var(--warn-soft); }
+  .breaks .tag { color: #9a5b00; }
+  table { width: 100%; border-collapse: collapse; margin: 0 0 3mm; font-size: 9.5pt; break-inside: auto; }
+  tr { break-inside: avoid; }
+  th, td { text-align: left; vertical-align: top; padding: 1.5mm 2mm; border-bottom: 1px solid var(--line); }
+  th { font-size: 8.5pt; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  figure { margin: 2mm 0 4mm; break-inside: avoid; }
+  figure svg { width: 100%; height: auto; display: block; }
+  figcaption { font-size: 9pt; color: var(--muted); margin-top: 1.5mm; }
+  .answers { break-before: page; }
+  .footer { margin-top: 8mm; font-size: 8.5pt; color: var(--muted); }
+
+  /* Diagram classes. Use these instead of inline colours. */
+  svg text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: var(--ink); }
+  svg .box { fill: var(--box); stroke: #8a96a1; stroke-width: 1.2; }
+  svg .box-accent { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.8; }
+  svg .zone { fill: none; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+  svg .title { font-weight: 700; }
+  svg .small { font-size: 12.5px; fill: var(--muted); }
+  svg .arrow { stroke: var(--ink); stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+  svg .arrow-accent { stroke: var(--accent); stroke-width: 2; fill: none; marker-end: url(#arrowhead-accent); }
+  svg .step circle { fill: var(--accent); }
+  svg .step text { fill: #fff; font-size: 12px; font-weight: 700; text-anchor: middle; dominant-baseline: central; }
+</style>
+</head>
+<body>
+
+<h1>TOPIC</h1>
+<p class="subtitle">After reading this, you will understand … <!-- One line: what the reader can do or explain afterwards. --></p>
+
+<h2>In one sentence</h2>
+<p class="lead"><!-- What it is. One sentence, no undefined terms. --></p>
+
+<h2>Why it exists</h2>
+<p><!-- The problem, told as a small story: what goes wrong without it. --></p>
+
+<div class="callout analogy">
+  <span class="tag">Think of it like</span>
+  <p><!-- One everyday analogy. Not from programming. --></p>
+</div>
+<div class="callout breaks">
+  <span class="tag">Where the analogy breaks</span>
+  <p><!-- The one way the analogy would mislead. --></p>
+</div>
+
+<h2>How it works</h2>
+<!--
+  The main diagram. Copy this structure: boxes with nouns, numbered arrows with
+  messages, one accent for the part that matters most. viewBox about 680 wide.
+  Number badges are <g class="step"> with a circle and a text.
+-->
+<figure>
+  <svg viewBox="0 0 680 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Example: a client asks a server and gets an answer">
+    <defs>
+      <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#1d2329"/>
+      </marker>
+      <marker id="arrowhead-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#0f766e"/>
+      </marker>
+    </defs>
+    <rect class="box" x="20" y="45" width="170" height="70" rx="6"/>
+    <text class="title" x="105" y="76" text-anchor="middle">Client</text>
+    <text class="small" x="105" y="96" text-anchor="middle">your laptop</text>
+
+    <rect class="box-accent" x="490" y="45" width="170" height="70" rx="6"/>
+    <text class="title" x="575" y="76" text-anchor="middle">Server</text>
+    <text class="small" x="575" y="96" text-anchor="middle">answers requests</text>
+
+    <path class="arrow" d="M195,65 L485,65"/>
+    <text x="340" y="56" text-anchor="middle">"Question"</text>
+    <g class="step"><circle cx="230" cy="65" r="10"/><text x="230" y="65">1</text></g>
+
+    <path class="arrow-accent" d="M485,100 L195,100"/>
+    <text x="340" y="122" text-anchor="middle">"Answer"</text>
+    <g class="step"><circle cx="450" cy="100" r="10"/><text x="450" y="100">2</text></g>
+  </svg>
+  <figcaption><!-- What to notice, not only what it shows. --></figcaption>
+</figure>
+<ol>
+  <li><!-- Step 1, matching the number in the diagram. --></li>
+  <li><!-- Step 2 --></li>
+</ol>
+
+<h2>Key terms</h2>
+<table>
+  <tr><th>Term</th><th>What it means</th></tr>
+  <tr><td><!-- term --></td><td><!-- plain definition --></td></tr>
+</table>
+
+<h2>Try it yourself</h2>
+<p><!-- What the commands show. Only commands that read. --></p>
+<pre><code>$ command
+<span class="out">expected output, with the important part marked:</span>
+<span class="hl">the line to notice</span></code></pre>
+<p><!-- What to notice in the output. --></p>
+
+<h2>In our platform</h2>
+<p><!-- Where this shows up, with real file paths in <code>. Optional second diagram. --></p>
+
+<h2>When it goes wrong</h2>
+<table>
+  <tr><th>Symptom</th><th>Likely cause</th><th>Check first</th></tr>
+  <tr><td><!-- --></td><td><!-- --></td><td><!-- --></td></tr>
+</table>
+
+<h2>Check yourself</h2>
+<ol>
+  <li><!-- A question that makes the reader apply the idea. Answers go at the back. --></li>
+</ol>
+
+<h2>Next topics</h2>
+<ul>
+  <li><strong><!-- Topic --></strong>: <!-- one line on why it comes next --></li>
+</ul>
+
+<section class="answers">
+  <h2>Answers</h2>
+  <ol>
+    <li><!-- Answer to question 1, with the reasoning. --></li>
+  </ol>
+  <p class="footer">Platform primer · TOPIC · <!-- date --></p>
+</section>
+
+</body>
+</html>
