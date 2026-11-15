@@ -28,6 +28,13 @@ Command execution and live MCP queries belong to the parent session. Advisory ag
 
 `imagegen`, `openai-docs`, `review-agent`, `skill-creator`, and `skill-installer` remain complete snapshots under `codex/skills/.system`. They depend on Codex-specific tool contracts, installation paths, packaging, or runtime behavior. They are not blindly exposed to other tools. Their archived scripts and assets are preserved for Codex; no plugin cache is imported.
 
+## Claude-only content
+
+Some Claude content was written in the local Claude installation and has not been ported to Codex or OpenCode yet:
+
+- `platform-tutor` teaches platform engineering to a trainee and helps their mentor prepare material. Its `scripts/build-pdf.sh` needs Chrome, Chromium, or Edge to print primers to PDF.
+- `engineering-review` adds follow-up reviews that cover only the changes since the user's last review, extra instructions for briefing and checking a fresh reviewer, and checks that examples and design choices hold under real input. The Codex and OpenCode `code-review` skills do not have these sections.
+
 ## Workflow details
 
 - `arrange` and `typeset` link to the shared references in `frontend-design`.
