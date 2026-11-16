@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Review"
+  short_description: "Understand, review, and comment on a pull request"
+  default_prompt: "Use $pr-review to help me understand this pull request, review it, and draft review comments."

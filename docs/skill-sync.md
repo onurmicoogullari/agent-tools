@@ -41,6 +41,7 @@ Some Claude content was written in the local Claude installation and has not bee
 - Design workflows reuse context from the current conversation before starting an onboarding interview.
 - `commit` distinguishes a branch-summary message from a message for the exact staged changes in a new commit. Branch inspection includes staged, unstaged, and relevant untracked changes.
 - GitHub helper examples use Python 3; Claude resolves bundled helpers with `${CLAUDE_SKILL_DIR}`.
+- `pr-review` chains `describe` and the review skill (`engineering-review` in Claude). It keeps the mental model and earlier PR discussion out of the fresh reviewer, and posts comments only after approval. Only Claude names a session-title tool; the others print the title. In Claude, `engineering-review` also decides whether a repeat review covers only the changes since the user's last review.
 - `find-skills` targets the current agent explicitly and respects project versus user installation scope.
 
 ## Maintenance checks
